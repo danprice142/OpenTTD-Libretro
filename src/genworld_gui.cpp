@@ -1507,6 +1507,13 @@ static void _SetGeneratingWorldProgress(GenWorldProgress cls, uint progress, uin
 	SetWindowDirty(WC_MODAL_PROGRESS, 0);
 
 	VideoDriver::GetInstance()->GameLoopPause();
+
+#ifdef WITH_LIBRETRO
+	/* For libretro, GameLoopPause() doesn't work (non-threaded driver),
+	 * so we pump frames directly to keep RetroArch responsive. */
+	extern void LibretroCore_PumpFrame();
+	LibretroCore_PumpFrame();
+#endif
 }
 
 /**
